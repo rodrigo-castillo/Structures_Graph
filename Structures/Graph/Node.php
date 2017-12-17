@@ -30,13 +30,6 @@
  * @package Structures_Graph
  */
 
-/* dependencies {{{ */
-/** */
-require_once 'PEAR.php';
-/** */
-require_once 'Structures/Graph.php';
-/* }}} */
-
 /* class Structures_Graph_Node {{{ */
 /**
  * The Structures_Graph_Node class represents a Node that can be member of a 
@@ -66,17 +59,6 @@ class Structures_Graph_Node {
     var $_arcs = array();
     /** @access private */
     var $_graph = null;
-    /* }}} */
-
-    /* Constructor {{{ */
-    /**
-    *
-    * Constructor
-    *
-    * @access	public
-    */
-    function __construct() {
-    }
     /* }}} */
 
     /* getGraph {{{ */
@@ -176,8 +158,7 @@ class Structures_Graph_Node {
                 $a = null;
                 return $a;
             } else {
-                $a = Pear::raiseError('Structures_Graph_Node::getMetadata: Requested key does not exist', STRUCTURES_GRAPH_ERROR_GENERIC);
-                return $a;
+                throw new Exception('Structures_Graph_Node::getMetadata: Requested key does not exist: ' . $key);
             }
         }
     }
@@ -237,10 +218,10 @@ class Structures_Graph_Node {
     */
     function connectTo(&$destinationNode) {
         // We only connect to nodes
-        if (!is_a($destinationNode, 'Structures_Graph_Node')) return Pear::raiseError('Structures_Graph_Node::connectTo received an object that is not a Structures_Graph_Node', STRUCTURES_GRAPH_ERROR_GENERIC);
+        if (!is_a($destinationNode, 'Structures_Graph_Node')) throw new Exception('Structures_Graph_Node::connectTo received an object that is not a Structures_Graph_Node', STRUCTURES_GRAPH_ERROR_GENERIC);
         // Nodes must already be in graphs to be connected
-        if ($this->_graph == null) return Pear::raiseError('Structures_Graph_Node::connectTo Tried to connect a node that is not in a graph', STRUCTURES_GRAPH_ERROR_GENERIC);
-        if ($destinationNode->getGraph() == null) return Pear::raiseError('Structures_Graph_Node::connectTo Tried to connect to a node that is not in a graph', STRUCTURES_GRAPH_ERROR_GENERIC);
+        if ($this->_graph == null) throw new Exception('Structures_Graph_Node::connectTo Tried to connect a node that is not in a graph', STRUCTURES_GRAPH_ERROR_GENERIC);
+        if ($destinationNode->getGraph() == null) throw new Exception('Structures_Graph_Node::connectTo Tried to connect to a node that is not in a graph', STRUCTURES_GRAPH_ERROR_GENERIC);
         // Connect here
         $this->_connectTo($destinationNode);
         // If graph is undirected, connect back
